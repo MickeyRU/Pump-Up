@@ -4,7 +4,7 @@ struct AddWorkoutView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: AddWorkoutViewModel
     
-    init(addWorkoutUseCase: AddWorkoutUseCase) {
+    init(addWorkoutUseCase: AddNewWorkoutUseCase) {
         _viewModel = StateObject(wrappedValue: AddWorkoutViewModel(addWorkoutUseCase: addWorkoutUseCase))
     }
 

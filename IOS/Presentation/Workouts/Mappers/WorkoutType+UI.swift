@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 extension WorkoutType {
     var displayName: String {
@@ -7,6 +7,7 @@ extension WorkoutType {
         case .pull_ups: "Подтягивания"
         }
     }
+    
     var iconName: String {
         switch self {
         case .push_ups: "push_ups_icon"

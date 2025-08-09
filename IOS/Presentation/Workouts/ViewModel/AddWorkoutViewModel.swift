@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 final class AddWorkoutViewModel: ObservableObject {
-    private let addWorkout: AddWorkoutUseCase
+    private let addWorkout: AddNewWorkoutUseCase
     
     @Published var workoutType: WorkoutType = .pull_ups
     @Published var reps: Int = 5
@@ -10,7 +10,7 @@ final class AddWorkoutViewModel: ObservableObject {
     @Published var restTime: TimeInterval = 120
     @Published var didSave: Bool = false
     
-    init(addWorkoutUseCase: AddWorkoutUseCase) {
+    init(addWorkoutUseCase: AddNewWorkoutUseCase) {
         self.addWorkout = addWorkoutUseCase
     }
     

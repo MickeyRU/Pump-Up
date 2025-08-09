@@ -1,12 +1,7 @@
 import Foundation
 
 @MainActor
-public protocol AddWorkoutUseCase {
-    func execute(workout: Workout) throws
-}
-
-@MainActor
-final class AddWorkoutUseCaseImpl: AddWorkoutUseCase {
+final class AddNewWorkoutUseCaseImpl: AddNewWorkoutUseCase {
     private let repository: WorkoutRepository
     
     init(repository: WorkoutRepository) {

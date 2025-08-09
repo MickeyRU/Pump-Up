@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WorkoutRowView: View {
+struct RowView: View {
     let workout: Workout
 
     var body: some View {
@@ -44,7 +44,7 @@ struct WorkoutRowView: View {
     let workout2 = Workout(type: .pull_ups, planning: plan)
 
     List {
-        WorkoutRowView(workout: workout1)
-        WorkoutRowView(workout: workout2)
+        RowView(workout: workout1)
+        RowView(workout: workout2)
     }
 }

@@ -2,23 +2,29 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var vm: MainViewModel
-    private let addWorkoutUseCase: AddWorkoutUseCase
     @State private var showAddWorkoutSheet = false
-    
-    init(repository: WorkoutRepository, addWorkoutUseCase: AddWorkoutUseCase) {
-          _vm = StateObject(wrappedValue: MainViewModel(repository: repository))
-          self.addWorkoutUseCase = addWorkoutUseCase
+
+    private let ucs: WorkoutUseCases
+
+    init(repository: WorkoutRepository, ucs: WorkoutUseCases) {
+        _vm = StateObject(wrappedValue: MainViewModel(repository: repository))
+        self.ucs = ucs
     }
-    
+
     var body: some View {
         TabView {
             NavigationStack {
                 List {
                     ForEach(vm.workouts, id: \.id.raw) { workout in
                         NavigationLink {
-                            WorkoutDetailView(workout: workout)
+                            DetailView(
+                                workout: workout,
+                                startUC: ucs.start,
+                                addSetUC: ucs.addSet,
+                                completeUC: ucs.complete
+                            )
                         } label: {
-                            WorkoutRowView(workout: workout)
+                            RowView(workout: workout)
                         }
                     }
                     .onDelete(perform: vm.delete)
@@ -29,18 +35,14 @@ struct MainView: View {
                         Button { showAddWorkoutSheet = true } label: { Image(systemName: "plus") }
                     }
                 }
-                .task {
-                    vm.start()
-                }
-                .onDisappear {
-                    vm.stop()
-                }
+                .task { vm.start() }
+                .onDisappear { vm.stop() }
             }
             .tabItem {
                 Image(systemName: "figure.strengthtraining.traditional")
                 Text("Тренировки")
             }
-            
+
             StatisticsView()
                 .tabItem {
                     Image(systemName: "chart.bar.fill")
@@ -48,7 +50,7 @@ struct MainView: View {
                 }
         }
         .sheet(isPresented: $showAddWorkoutSheet) {
-            AddWorkoutView(addWorkoutUseCase: addWorkoutUseCase)
+            AddWorkoutView(addWorkoutUseCase: ucs.add)
         }
     }
 }
