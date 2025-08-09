@@ -1,6 +1,6 @@
 import Foundation
 
-protocol StartWorkoutUseCase {
+public protocol StartWorkoutUseCase {
     func execute(type: WorkoutType, planning: WorkoutPlanData) -> Workout
 }
 

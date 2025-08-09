@@ -3,19 +3,19 @@ import SwiftData
 
 @main
 struct PumpUpApp: App {
-    private let modelContainer: ModelContainer
-    private let workoutRepository: WorkoutRepository
-    
+    private let container = ModelContainer.make()
+    private let repo: WorkoutRepository
+    private let addWorkoutUC: AddWorkoutUseCase
+
     init() {
-            self.modelContainer = ModelContainer.make()
-            let context = modelContainer.mainContext
-            self.workoutRepository = WorkoutRepositoryImpl(context: context)
+        repo = WorkoutRepositoryImpl(context: container.mainContext)
+        addWorkoutUC = AddWorkoutUseCaseImpl(repository: repo)
     }
     
     var body: some Scene {
         WindowGroup {
-            MainView(repository: workoutRepository)
-        }
+            MainView(repository: repo, addWorkoutUseCase: addWorkoutUC)
+        }.modelContainer(container)
     }
 }
 

@@ -1,11 +1,11 @@
 import Foundation
 
-public struct WorkoutID: Hashable, Codable {
+public struct WorkoutID: Hashable, Codable, Sendable {
     public let raw: UUID
     public init(raw: UUID) { self.raw = raw }
 }
 
-public struct Workout {
+public struct Workout: Sendable {
     public var id: WorkoutID
     public var type: WorkoutType
     public var startDate: Date
@@ -37,17 +37,17 @@ public struct Workout {
     }
 }
 
-public struct WorkoutPlanData: Codable {
+public struct WorkoutPlanData: Codable, Sendable {
     public var repeatsPerSet: Int
     public var sets: Int
     public var restTime: TimeInterval
 }
 
-public struct WorkoutSetData: Codable {
+public struct WorkoutSetData: Codable, Sendable {
     public var reps: Int
     public var restTime: TimeInterval
 }
 
-public enum WorkoutStatus: String, Codable { case notStarted, inProgress, completed }
+public enum WorkoutStatus: String, Codable, Sendable { case notStarted, inProgress, completed }
 
-public enum WorkoutType: String, Codable, CaseIterable { case push_ups, pull_ups }
+public enum WorkoutType: String, Codable, Sendable, CaseIterable { case push_ups, pull_ups }

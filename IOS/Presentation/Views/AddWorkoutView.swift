@@ -1,12 +1,13 @@
 import SwiftUI
-import SwiftData
 
 struct AddWorkoutView: View {
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: AddWorkoutViewModel
     
-    @StateObject private var viewModel = AddWorkoutViewModel()
-    
+    init(addWorkoutUseCase: AddWorkoutUseCase) {
+        _viewModel = StateObject(wrappedValue: AddWorkoutViewModel(addWorkoutUseCase: addWorkoutUseCase))
+    }
+
     var body: some View {
         Form {
             Section(header: Text("Тип тренировки")) {
@@ -28,11 +29,14 @@ struct AddWorkoutView: View {
             
             Section {
                 Button("Сохранить тренировку") {
-                    let workout = viewModel.buildWorkout()
-//                    modelContext.insert(workout)
-                    dismiss()
+                    viewModel.save()
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+            }
+            .onChange(of: viewModel.didSave) { _, saved in
+                if saved {
+                    dismiss()
+                }
             }
         }
         .navigationTitle("Новая тренировка")
