@@ -1,11 +1,11 @@
 import Foundation
 
-public struct WorkoutID: Sendable {
+public struct WorkoutID: Sendable, Hashable {
     public let raw: UUID
     public init(raw: UUID) { self.raw = raw }
 }
 
-public struct Workout: Sendable {
+public struct Workout: Sendable, Identifiable {
     public var id: WorkoutID
     public var type: WorkoutType
     public var startDate: Date
