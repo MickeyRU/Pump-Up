@@ -10,7 +10,7 @@ struct RowView: View {
                 .scaledToFit()
                 .frame(width: 50, height: 50)
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(item.title)
                     .font(.headline)
                     .foregroundStyle(.primary)
@@ -40,7 +40,7 @@ struct RowView: View {
                 }
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 5)
     }
     
     func formatDate(_ date: Date) -> String {

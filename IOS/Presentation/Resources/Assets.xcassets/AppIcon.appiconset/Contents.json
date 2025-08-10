@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "freepik_assistant_1754598147189.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -12,6 +13,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "icon_no_background.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
