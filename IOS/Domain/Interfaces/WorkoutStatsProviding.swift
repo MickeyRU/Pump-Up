@@ -20,7 +20,6 @@ public protocol WorkoutStatsProviding: Sendable {
                              now: Date,
                              calendar: Calendar) -> [(date: Date, count: Int)]
 
-    // Async/helpers (параллельная агрегация больших наборов)
     func statsAsync(for workout: Workout) async -> WorkoutStats
     func aggregateAsync(for workouts: [Workout]) async -> WorkoutStats
     func typeStatsAsync(for workouts: [Workout]) async -> [WorkoutTypeStats]

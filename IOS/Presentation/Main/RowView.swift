@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RowView: View {
+    @Environment(\.workoutDateMapper) private var dateMapper
     let item: WorkoutRowItem
     
     var body: some View {
@@ -16,24 +17,25 @@ struct RowView: View {
                     .foregroundStyle(.primary)
                     .lineLimit(1)
                 
-                Text("\(item.setsCompleted) подходов")
+                Text(L10n.Workouts.sets(item.setsCompleted))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
-                Text("\(item.totalReps) повторений")
+                
+                Text(L10n.Workouts.reps(item.totalReps))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
             .layoutPriority(1)
             
-            Spacer()
+            Spacer(minLength: 0)
                                     
             VStack(alignment: .trailing) {
                 StatusBadge(status: item.status)
                 
                 if item.status == .completed, let endDate = item.endDate {
-                    Text(formatDate(endDate))
+                    Text(dateMapper.format(endDate))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -41,57 +43,5 @@ struct RowView: View {
             }
         }
         .padding(.vertical, 5)
-    }
-    
-    func formatDate(_ date: Date) -> String {
-        let calendar = Calendar.current
-        if calendar.isDateInToday(date) {
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "Сегодня HH:mm"
-            return timeFormatter.string(from: date)
-        } else {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "d.MM.yy HH:mm"
-            dateFormatter.locale = Locale(identifier: "ru_RU")
-            return dateFormatter.string(from: date)
-        }
-    }
-}
-
-#Preview {
-    List {
-        RowView(item: WorkoutRowItem(
-            id: WorkoutID(raw: UUID()),
-            iconName: "push_ups_icon",
-            title: "Отжимания",
-            setsCompleted: 0,
-            totalReps: 0,
-            setsPlanned: 40,
-            endDate: nil,
-            status: .notStarted
-        ))
-        let fiveHoursAgo = Date().addingTimeInterval(-5 * 60 * 60)
-        
-        RowView(item: WorkoutRowItem(
-            id: WorkoutID(raw: UUID()),
-            iconName: "pull_ups_icon",
-            title: "Подтягивания",
-            setsCompleted: 5,
-            totalReps: 50,
-            setsPlanned: 20,
-            endDate: Date().addingTimeInterval(-5 * 60 * 60),
-            status: .completed
-        ))
-        
-        RowView(item: WorkoutRowItem(
-            id: WorkoutID(raw: UUID()),
-            iconName: "pull_ups_icon",
-            title: "Подтягивания",
-            setsCompleted: 5,
-            totalReps: 50,
-            setsPlanned: 20,
-            endDate: Date(),
-            status: .completed
-        ))
     }
 }

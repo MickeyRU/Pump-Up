@@ -1,14 +1,16 @@
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.workoutStatsProvider) private var stats
     @StateObject private var vm: MainViewModel
     @State private var showAddWorkoutSheet = false
     @State private var selectedWorkoutID: WorkoutID?
     
     private let ucs: WorkoutUseCases
     
-    init(repository: WorkoutRepository, ucs: WorkoutUseCases, stats: WorkoutStatsProviding) {
-        _vm = StateObject(wrappedValue: MainViewModel(repository: repository, stats: stats))
+    init(repository: WorkoutRepository,
+         ucs: WorkoutUseCases) {
+        _vm = StateObject(wrappedValue: MainViewModel(repository: repository))
         self.ucs = ucs
     }
     
@@ -30,27 +32,18 @@ struct MainView: View {
                         Button { showAddWorkoutSheet = true } label: { Image(systemName: "plus") }
                     }
                 }
-                .task {
-                    vm.start()
-                }
-                .onDisappear {
-                    vm.stop()
-                }
+                .task { vm.start(with: stats) }
+                .onDisappear { vm.stop() }
                 .navigationDestination(item: $selectedWorkoutID) { workoutID in
                     if let workout = vm.workout(by: workoutID) {
-                        DetailView(
-                            workout: workout,
-                            startUC: ucs.start,
-                            addSetUC: ucs.addSet,
-                            completeUC: ucs.complete
-                        )
+                        DetailView(workout: workout, ucs: ucs)
                     } else {
                         Text("Тренировка не найдена")
                     }
                 }
             }
             .tabItem {
-                Image(systemName: "figure.strengthtraining.traditional")
+                Image("workout_icon")
                 Text("Тренировки")
             }
             

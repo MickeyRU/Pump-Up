@@ -2,34 +2,30 @@ import Foundation
 
 @MainActor
 final class MainViewModel: ObservableObject {
-    // Внутренние доменные данные
     @Published private(set) var workouts: [Workout] = []
-    
-    // Паблишим только то, что нужно UI
     @Published private(set) var rows: [WorkoutRowItem] = []
     
     private let repo: WorkoutRepository
-    private let statsService: WorkoutStatsProviding
+    private var statsService: WorkoutStatsProviding!
     private var streamTask: Task<Void, Never>?
     
-    init(repository: WorkoutRepository, stats: WorkoutStatsProviding) {
+    init(repository: WorkoutRepository) {
         self.repo = repository
-        self.statsService = stats
     }
     
-    func start() {
+    func start(with stats: WorkoutStatsProviding) {
+        self.statsService = stats
+
         streamTask?.cancel()
         streamTask = Task {
             for await items in repo.observeAll() {
-                // 1) сохраним доменную модель
                 self.workouts = items
                 
-                // 2) посчитаем статистику в фоне
                 let statsById = await withTaskGroup(
                     of: (WorkoutID, WorkoutStats).self,
                     returning: [WorkoutID: WorkoutStats].self
                 ) { group in
-                    let service = statsService
+                    let service = stats
                     for w in items {
                         group.addTask(priority: .utility) { (w.id, service.stats(for: w)) }
                     }

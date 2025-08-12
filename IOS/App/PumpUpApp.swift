@@ -3,13 +3,13 @@ import SwiftData
 
 @main
 struct PumpUpApp: App {
-    @StateObject private var appDI = AppDIContainer()
+    private var appDI = AppDIContainer()
 
     var body: some Scene {
         WindowGroup {
             WorkoutsRootView()
                 .environmentObject(appDI.workoutsDI)
-            
+                .environment(\.workoutDateMapper, DefaultWorkoutDateMapper())
         }.modelContainer(appDI.modelContainer)
     }
 }
