@@ -9,10 +9,10 @@ final class WorkoutsDIContainer: ObservableObject {
 
     init(repo: WorkoutRepository) {
         self.repo = repo
-        self.ucs = WorkoutUseCases(add: AddNewWorkoutUseCaseImpl(repository: repo),
+        self.ucs = WorkoutUseCases(addNew: AddNewWorkoutUseCaseImpl(repository: repo),
                                    start: StartWorkoutUseCaseImpl(repository: repo),
                                    addSet: AddSetUseCaseImpl(repository: repo),
-                                   complete: CompleteWorkoutUseCaseImpl(repository: repo))
+                                   finish: FinishWorkoutUseCaseImpl(repository: repo))
         self.stats = WorkoutStatsService()
     }
 }

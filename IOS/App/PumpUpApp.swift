@@ -10,6 +10,7 @@ struct PumpUpApp: App {
             WorkoutsRootView()
                 .environmentObject(appDI.workoutsDI)
                 .environment(\.workoutDateMapper, DefaultWorkoutDateMapper())
+                .environment(\.workoutStatsProvider, appDI.workoutsDI.stats)
         }.modelContainer(appDI.modelContainer)
     }
 }

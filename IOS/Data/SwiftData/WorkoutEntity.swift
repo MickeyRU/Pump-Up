@@ -5,7 +5,7 @@ import Foundation
 final class WorkoutEntity {
     @Attribute(.unique) var id: UUID
     var typeRaw: String
-    var startDate: Date
+    var startDate: Date?
     var statusRaw: String
     var repeatsPerSet: Int
     var plannedSets: Int

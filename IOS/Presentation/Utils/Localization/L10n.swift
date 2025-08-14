@@ -19,5 +19,9 @@ enum L10n {
         static var today: String {
             String(localized: "workout.date.today", table: "Workouts", comment: "Сегодня")
         }
+        
+        static var time: String {
+            String(localized: "workout.time", table: "Workouts", comment: "Время")
+        }
     }
 }

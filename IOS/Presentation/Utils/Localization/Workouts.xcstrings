@@ -108,6 +108,7 @@
       }
     },
     "workout.date.today" : {
+      "comment" : "Сегодня",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -120,6 +121,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Сегодня"
+          }
+        }
+      }
+    },
+    "workout.time" : {
+      "comment" : "Время",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "time"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "время"
           }
         }
       }
