@@ -5,6 +5,7 @@ final class DetailViewModel: WorkoutStatsUpdatable, ObservableObject {
     @Published private(set) var workout: Workout
     @Published private(set) var stats: WorkoutStats?
     @Published private(set) var rowItem: WorkoutHeaderItem
+    @Published private(set) var recentSetRows: [SetsHistoryRow] = []
     
     @Published var isResting = false
     @Published var restRemaining: Int = 0
@@ -14,6 +15,8 @@ final class DetailViewModel: WorkoutStatsUpdatable, ObservableObject {
     private var statsProvider: WorkoutStatsProviding?
     private var tickerTask: Task<Void, Never>?
     private var restTask: Task<Void, Never>?
+    
+    private var lastSetsCount: Int
     
     init(workout: Workout, ucs: WorkoutUseCases) {
         self.workout = workout
@@ -27,6 +30,8 @@ final class DetailViewModel: WorkoutStatsUpdatable, ObservableObject {
             status: workout.status
         )
         self.repsForNextSet = workout.planning.repeatsPerSet
+        self.lastSetsCount  = workout.sets.count
+        self.rebuildRecentRowsFastIfNeeded(from: workout.sets, forceFullRebuild: true)
     }
     
     func start(with provider: WorkoutStatsProviding) {
@@ -118,17 +123,49 @@ final class DetailViewModel: WorkoutStatsUpdatable, ObservableObject {
     private func recalcStats() {
         guard let statsProvider else { return }
         stats = statsProvider.getStats(for: workout)
+        
         rowItem = WorkoutHeaderItem(
             iconName: workout.type.iconName,
             title: workout.type.displayName,
             endDate: workout.endDate,
             status: workout.status
         )
+        
+        rebuildRecentRowsFastIfNeeded(from: workout.sets)
+
         if workout.endDate != nil { stop() }
     }
     
     private func apply(_ updated: Workout) {
         workout = updated
+        rebuildRecentRowsFastIfNeeded(from: workout.sets)
         recalcStats()
+    }
+    
+    private func rebuildRecentRowsFastIfNeeded(from sets: [WorkoutSetData], forceFullRebuild: Bool = false) {
+        if forceFullRebuild || recentSetRows.isEmpty {
+            let rows = sets.enumerated().map { (idx, s) in
+                SetsHistoryRow(id: s.id, date: s.performedAt, reps: s.reps, index: idx + 1)
+            }
+            recentSetRows = Array(rows.reversed())
+            lastSetsCount = sets.count
+            return
+        }
+        
+        guard sets.count > lastSetsCount else { return }
+        
+        let delta = sets.count - lastSetsCount
+        let newSlice = sets.suffix(delta)
+        var toPrepend: [SetsHistoryRow] = []
+        toPrepend.reserveCapacity(delta)
+        
+        var nextIndex = lastSetsCount + 1
+        for s in newSlice {
+            toPrepend.append(SetsHistoryRow(id: s.id, date: s.performedAt, reps: s.reps, index: nextIndex))
+            nextIndex += 1
+        }
+        
+        recentSetRows.insert(contentsOf: toPrepend.reversed(), at: 0)
+        lastSetsCount = sets.count
     }
 }

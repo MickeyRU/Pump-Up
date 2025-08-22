@@ -9,7 +9,14 @@ extension WorkoutEntity {
             status: WorkoutStatus(rawValue: statusRaw) ?? .notStarted,
             planning: .init(repeatsPerSet: repeatsPerSet, sets: plannedSets, restTime: restTime),
             endDate: endDate,
-            sets: sets.map { .init(reps: $0.reps, restTime: $0.restTime) }
+            sets: sets.map {
+                WorkoutSetData(
+                    id: $0.id,
+                    reps: $0.reps,
+                    restTime: $0.restTime,
+                    performedAt: $0.performedAt
+                )
+            }
         )
     }
 }

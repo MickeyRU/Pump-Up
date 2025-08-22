@@ -46,22 +46,21 @@ final class WorkoutRepositoryImpl: WorkoutRepository {
         AsyncStream(bufferingPolicy: .bufferingNewest(1)) { continuation in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-
+                
                 let key = UUID()
                 self.observers[key] = continuation
-
+                
                 continuation.onTermination = { [weak self] _ in
                     Task { @MainActor in
                         self?.observers.removeValue(forKey: key)
                     }
                 }
-
+                
                 // стартовый снапшот
                 continuation.yield((try? await self.loadAll()) ?? [])
             }
         }
     }
-    
     
     func save(_ workout: Workout) async throws {
         let all = try context.fetch(FetchDescriptor<WorkoutEntity>())
@@ -73,7 +72,7 @@ final class WorkoutRepositoryImpl: WorkoutRepository {
             existing.plannedSets   = workout.planning.sets
             existing.restTime      = workout.planning.restTime
             existing.endDate       = workout.endDate
-            existing.sets          = workout.sets.map { WorkoutSetRecord(reps: $0.reps, restTime: $0.restTime) }
+            existing.sets          = workout.sets.map { WorkoutSetRecord(id: $0.id, reps: $0.reps, restTime: $0.restTime, performedAt: $0.performedAt) }
         } else {
             context.insert(WorkoutEntity(from: workout))
         }

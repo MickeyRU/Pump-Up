@@ -9,7 +9,7 @@ struct ProgressCircleView: View {
     private let size: CGFloat = 80
     private let lineWidth: CGFloat = 8
     private let trackColor: Color = .gray.opacity(0.15)
-    
+
     var body: some View {
         VStack(spacing: 8) {
             ZStack {
@@ -22,12 +22,9 @@ struct ProgressCircleView: View {
                 Text(valueText).font(.headline).foregroundStyle(.primary)
             }
             .frame(width: size, height: size)
-            
+
             Text(title).font(.caption).foregroundStyle(.secondary)
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(radius: 1)
     }
 }

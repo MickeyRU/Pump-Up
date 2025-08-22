@@ -2,7 +2,6 @@ import SwiftUI
 
 struct DetailView: View {
     @Environment(\.workoutStatsProvider) private var stats
-    
     @StateObject private var vm: DetailViewModel
     
     init(workout: Workout, ucs: WorkoutUseCases) {
@@ -14,9 +13,10 @@ struct DetailView: View {
             VStack(spacing: 16) {
                 WorkoutHeaderView(item: vm.rowItem)
                 if let stats = vm.stats {
-                    WorkoutStatsView(stats: stats)
+                    WorkoutStatsRow(stats: stats)
                 }
                 WorkoutControlView(vm: vm)
+                SetsHistoryView(sets: vm.recentSetRows)
             }
             .padding()
             .task { vm.start(with: stats) }
@@ -24,5 +24,7 @@ struct DetailView: View {
         }
         .navigationTitle("Детали тренировки")
         .navigationBarTitleDisplayMode(.inline)
+        .background(Color(.systemBackground))
+        .scrollIndicators(.hidden)
     }
 }

@@ -28,12 +28,11 @@ struct RowView: View {
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                 }
-                
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .layoutPriority(1)
             
-            VStack(alignment: .trailing, spacing: 2) {
+            VStack(alignment: .trailing, spacing: 5) {
                 StatusBadge(status: item.status)
                 
                 if item.status == .completed, let endDate = item.endDate {
@@ -47,6 +46,6 @@ struct RowView: View {
             .multilineTextAlignment(.trailing)
             .layoutPriority(2)
         }
-        .padding(.vertical, 5)
+        .padding(.horizontal) 
     }
 }

@@ -4,6 +4,7 @@ struct MainView: View {
     @Environment(\.workoutStatsProvider) private var stats
     @StateObject private var vm: MainViewModel
     @State private var showAddWorkoutSheet = false
+    @State private var selected: WorkoutID?
     
     private let ucs: WorkoutUseCases
     
@@ -14,23 +15,30 @@ struct MainView: View {
     
     var body: some View {
         TabView {
+            // TAB 1 — Тренировки
             NavigationStack {
                 List {
                     ForEach(vm.rows) { row in
-                        NavigationLink(value: row.id) {
+                        Button { selected = row.id } label: {
                             RowView(item: row)
-                                .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
+                                .contentShape(Rectangle())
                         }
+                        .buttonStyle(.plain)
                     }
                     .onDelete(perform: vm.delete)
                 }
+                .listStyle(.plain)
                 .navigationTitle("Тренировки")
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button { showAddWorkoutSheet = true } label: { Image(systemName: "plus") }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            showAddWorkoutSheet = true
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                        }
                     }
                 }
-                .navigationDestination(for: WorkoutID.self) { workoutID in
+                .navigationDestination(item: $selected) { workoutID in
                     if let workout = vm.workout(by: workoutID) {
                         DetailView(workout: workout, ucs: ucs)
                     } else {
@@ -39,7 +47,6 @@ struct MainView: View {
                 }
                 .task { vm.start(with: stats) }
                 .onDisappear { vm.stop() }
-                
             }
             .tabItem {
                 Image("workout_icon")

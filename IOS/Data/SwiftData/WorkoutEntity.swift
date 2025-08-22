@@ -22,11 +22,27 @@ final class WorkoutEntity {
         self.plannedSets = domain.planning.sets
         self.restTime = domain.planning.restTime
         self.endDate = domain.endDate
-        self.sets = domain.sets.map { .init(reps: $0.reps, restTime: $0.restTime) }
+        self.sets = domain.sets.map {
+            WorkoutSetRecord(
+                id: $0.id,
+                reps: $0.reps,
+                restTime: $0.restTime,
+                performedAt: $0.performedAt
+            )
+        }
     }
 }
 
 struct WorkoutSetRecord: Codable {
+    var id: UUID
     var reps: Int
     var restTime: TimeInterval
+    var performedAt: Date
+
+    init(id: UUID, reps: Int, restTime: TimeInterval, performedAt: Date) {
+        self.id = id
+        self.reps = reps
+        self.restTime = restTime
+        self.performedAt = performedAt
+    }
 }

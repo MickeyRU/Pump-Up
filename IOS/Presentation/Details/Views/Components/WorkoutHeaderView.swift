@@ -31,8 +31,6 @@ struct WorkoutHeaderView: View {
             StatusBadge(status: item.status)
         }
         .padding()
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(radius: 1)
+        .statCardStyle()
     }
 }

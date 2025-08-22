@@ -2,7 +2,6 @@ import SwiftUI
 
 struct WorkoutControlView: View {
     @ObservedObject var vm: DetailViewModel
-    var restDefault: Int = 60 // сек, если нет плана
 
     var body: some View {
         VStack(spacing: 14) {
@@ -39,7 +38,7 @@ struct WorkoutControlView: View {
                 }
             }
 
-            // 3) Капсула отдыха (плывёт сверху и исчезает)
+            // 3) Капсула отдыха
             if vm.isResting {
                 RestCapsule(
                     remaining: vm.restRemaining,
@@ -90,8 +89,7 @@ private struct ControlCard<Content: View>: View {
             content
         }
         .padding(14)
-        .background(Color(.secondarySystemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .statCardStyle()
     }
 }
 
@@ -130,17 +128,14 @@ private struct RepsDial: View {
 
             HStack(spacing: 6) {
                 RoundIconButton(systemName: "minus", action: onMinus)
-                    .frame(minWidth: 36) // кнопка чуть шире для клика
                 Text("\(value)")
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(.title2.weight(.bold))
                     .monospacedDigit()
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                    .frame(minWidth: 36) // зависит от числа
+                    .frame(minWidth: 44)
                 RoundIconButton(systemName: "plus", action: onPlus)
-                    .frame(minWidth: 36)
             }
-            .frame(maxWidth: .infinity)
         }
     }
 }
@@ -184,10 +179,11 @@ private struct RoundIconButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: 18, weight: .semibold))
-                .frame(width: 36, height: 36)
-                .background(Color(.systemGray5))
+                .font(.headline)
+                .frame(width: 44, height: 44)
+                .background(Color(UIColor.tertiarySystemFill))
                 .clipShape(Circle())
+                .contentShape(Circle())
         }
         .buttonStyle(.plain)
     }
@@ -222,10 +218,7 @@ private struct RestCapsule: View {
             Button("Закончить") { stopEarly() }
                 .buttonStyle(.borderedProminent)
         }
-        .padding(.vertical, 10)
-        .padding(.horizontal, 12)
-        .background(.ultraThinMaterial)
-        .clipShape(Capsule(style: .continuous))
-        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 3)
+        .padding(14)
+        .statCardStyle()
     }
 }
